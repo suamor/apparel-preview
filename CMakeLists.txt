@@ -8,7 +8,11 @@ project(ApparelPreview VERSION 0.4.3 LANGUAGES CXX)
 # Use our supplied pinned CommonLib submodule as dependency instead
 # of the pinned (but outdated) CommonLib vcpkg package.
 # Pinned Version used for this release is 6.8.0
-find_package(CommonLibSSE REQUIRED)
+set(COMMONLIB_SSE_FOLDER ${CMAKE_CURRENT_SOURCE_DIR}/extern/src/CommonLibSSE-NG CACHE PATH "CommonLibSSE-NG source")
+add_subdirectory(${COMMONLIB_SSE_FOLDER} ${CMAKE_BINARY_DIR}/CommonLibSSE)
+# ToDo: Why do we need to include this in the main CMakeLists.txt
+# These 3 lines should be externalized or simplified.
+include(${COMMONLIB_DIR}/cmake/CommonLibSSE.cmake)
 
 # jsoncpp's exported config predates CMake 3.5's policy floor.
 set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
@@ -50,7 +54,7 @@ add_commonlibsse_plugin(${PROJECT_NAME}
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)
 target_precompile_headers(${PROJECT_NAME} PRIVATE src/PCH.h)
 target_include_directories(${PROJECT_NAME} PRIVATE extern)
-target_link_libraries(${PROJECT_NAME} PRIVATE JsonCpp::JsonCpp imgui::imgui CommonLibSSE::CommonLibSSE)
+target_link_libraries(${PROJECT_NAME} PRIVATE JsonCpp::JsonCpp imgui::imgui)
 # FLICK / FUCK is consumed at runtime via its C-ABI (extern/FUCK_API.h +
 # FUCK.dll's RequestFUCK export); we only need imgui's headers/types for the
 # API surface, FUCK.dll does the rendering.
