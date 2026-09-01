@@ -12,7 +12,7 @@ set(COMMONLIB_SSE_FOLDER ${CMAKE_CURRENT_SOURCE_DIR}/extern/src/CommonLibSSE-NG 
 add_subdirectory(${COMMONLIB_SSE_FOLDER} ${CMAKE_BINARY_DIR}/CommonLibSSE)
 # ToDo: Why do we need to include this in the main CMakeLists.txt
 # These 3 lines should be externalized or simplified.
-include(${COMMONLIB_DIR}/cmake/CommonLibSSE.cmake)
+include(${COMMONLIB_SSE_FOLDER}/cmake/CommonLibSSE.cmake)
 
 # jsoncpp's exported config predates CMake 3.5's policy floor.
 set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
