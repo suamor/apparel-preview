@@ -3,6 +3,7 @@
     "name": "apparel-preview",
     "version-string": "0.4.3_NG",
     "dependencies": [
+        "catch2",
         "directxmath",
         "directxtk",
         "fmt",
