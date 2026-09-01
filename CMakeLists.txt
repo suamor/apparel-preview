@@ -1,11 +1,18 @@
 cmake_minimum_required(VERSION 3.21)
 
 # "Apparel Preview" - preview armor on the player in Container/Barter menus
-# without equipping. One CommonLibSSE-NG DLL for SE 1.5.97 + AE 1.6.1130+
-# (AE offsets verified against the 1.6.1170 binary).
+# without equipping. One CommonLibSSE-NG DLL for GOG / SE 1.5.97 + 1.6.1170 + 1.7.99+
+# (AE offsets verified against the 1.7.104 binary).
 project(ApparelPreview VERSION 0.4.3 LANGUAGES CXX)
 
-find_package(CommonLibSSE CONFIG REQUIRED)
+# Use our supplied pinned CommonLib submodule as dependency instead
+# of the pinned (but outdated) CommonLib vcpkg package.
+# Pinned Version used for this release is 6.8.0
+add_subdirectory(
+    extern/src/CommonLibSSE-NG
+    EXCLUDE_FROM_ALL
+)
+
 # jsoncpp's exported config predates CMake 3.5's policy floor.
 set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
 find_package(jsoncpp CONFIG REQUIRED)  # DIII_API.h passes Json::Value across the API

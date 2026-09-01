@@ -39,26 +39,6 @@ jobs:
           --triplet ${{ env.VCPKG_TARGET_TRIPLET }}
           --overlay-triplets=.\cmake\
 
-      - name: Verify CommonLibSSE-NG version
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-
-          $expected = '6.8.0'
-          $installed = & "$env:VCPKG_ROOT\vcpkg.exe" list commonlibsse-ng `
-            --triplet "$env:VCPKG_TARGET_TRIPLET"
-
-          if ($LASTEXITCODE -ne 0) {
-            throw "vcpkg list failed for commonlibsse-ng"
-          }
-
-          $installed | ForEach-Object { Write-Host $_ }
-
-          if ($installed -notmatch `
-              '^commonlibsse-ng:x64-windows-static-md\s+6\.8\.0(?:#\d+)?\b') {
-            throw "Expected commonlibsse-ng $expected for $env:VCPKG_TARGET_TRIPLET; actual result shown above."
-          }
-
       - name: Configure
         run: >
           cmake
