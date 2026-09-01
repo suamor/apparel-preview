@@ -2,7 +2,6 @@
     "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
     "name": "apparel-preview",
     "version-string": "0.4.3_NG",
-    "builtin-baseline": "fab1c6dc7a944372a90a1e19ab5e8e32cd658fc2",
     "dependencies": [
         "directxmath",
         "directxtk",
