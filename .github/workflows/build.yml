@@ -34,11 +34,6 @@ jobs:
         shell: cmd
         run: ${{ env.VCPKG_ROOT }}\bootstrap-vcpkg.bat
 
-      - name: Install dependencies
-        run: ${{ env.VCPKG_ROOT }}\vcpkg install
-          --triplet ${{ env.VCPKG_TARGET_TRIPLET }}
-          --overlay-triplets=.\cmake\
-
       - name: Configure
         run: >
           cmake
@@ -48,7 +43,6 @@ jobs:
           -A x64
           -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}\scripts\buildsystems\vcpkg.cmake
           -DVCPKG_TARGET_TRIPLET=${{ env.VCPKG_TARGET_TRIPLET }}
-          -DVCPKG_MANIFEST_INSTALL=OFF
 
       - name: Build
         run: >
