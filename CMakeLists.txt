@@ -5,6 +5,11 @@ cmake_minimum_required(VERSION 3.21)
 # (AE offsets verified against the 1.7.104 binary).
 project(ApparelPreview VERSION 0.4.3 LANGUAGES CXX)
 
+# Some versions of MSVC collide in own Windows headers with oder min/max declarations
+if (WIN32)
+    add_compile_definitions(NOMINMAX)
+endif()
+
 # Use our supplied pinned CommonLib submodule as dependency instead
 # of the pinned (but outdated) CommonLib vcpkg package.
 # Pinned Version used for this release is 6.8.0
