@@ -148,7 +148,7 @@ namespace AP {
                 continue;
             }
             if (auto* entry = HoverTracker::GetHovered()) {
-                auto* obj  = entry->GetObject();
+                auto* obj  = entry->object;
                 auto* armo = obj ? obj->As<RE::TESObjectARMO>() : nullptr;
                 if (armo) {
                     PreviewSession::GetSingleton().Toggle(

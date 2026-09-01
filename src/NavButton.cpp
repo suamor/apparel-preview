@@ -33,7 +33,7 @@ namespace AP::NavButton {
                 return false;  // no armature for this body - cannot preview
             }
             using Slot      = RE::BGSBipedObjectForm::BipedObjectSlot;
-            const auto mask = static_cast<std::uint32_t>(a_armo->GetSlotMask());
+            const auto mask = a_armo->GetSlotMask().underlying();
             if (!Settings::GetSingleton().allowShields &&
                 (mask & static_cast<std::uint32_t>(Slot::kShield)) != 0) {
                 return false;  // shield preview disabled
@@ -72,7 +72,7 @@ namespace AP::NavButton {
         }
 
         auto*      entry      = HoverTracker::GetHovered();
-        auto*      obj        = entry ? entry->GetObject() : nullptr;
+        auto*      obj        = entry ? entry->object : nullptr;
         const bool canPreview = obj && CanPreview(entry, obj->As<RE::TESObjectARMO>());
 
         // ---- IDEMPOTENCY --------------------------------------------------
