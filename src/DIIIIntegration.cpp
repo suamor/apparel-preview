@@ -14,7 +14,7 @@ namespace AP {
             explicit PreviewedCondition(bool a_expected) : expected_(a_expected) {}
 
             bool Match(RE::InventoryEntryData* a_entry) const override {
-                const auto* obj = a_entry ? a_entry->GetObject() : nullptr;
+                const auto* obj = a_entry ? a_entry->object : nullptr;
                 if (!obj) {
                     return !expected_;
                 }

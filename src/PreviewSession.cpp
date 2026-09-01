@@ -4,6 +4,8 @@
 #include "ListMarker.h"
 #include "Settings.h"
 
+#include "RE/S/SendHUDMessage.h"
+
 namespace AP {
 
     PreviewSession& PreviewSession::GetSingleton() {
@@ -78,13 +80,13 @@ namespace AP {
                          a_armor->GetName(), a_armor->GetFormID(),
                          race ? race->GetName() : "?");
             if (Settings::GetSingleton().notifyUnfitPreview) {
-                RE::DebugNotification("Cannot preview: this piece does not fit your body.",
+                RE::SendHUDMessage::ShowHUDMessage("Cannot preview: this piece does not fit your body.",
                                       "UIMenuCancel");
             }
             return;
         }
         using Slot = RE::BGSBipedObjectForm::BipedObjectSlot;
-        const auto slotMask = static_cast<std::uint32_t>(a_armor->GetSlotMask());
+        const auto slotMask = a_armor->GetSlotMask().underlying();
         if (!Settings::GetSingleton().allowShields &&
             (slotMask & static_cast<std::uint32_t>(Slot::kShield)) != 0) {
             spdlog::debug("Toggle: '{}' is a shield and shield preview is disabled.", a_armor->GetName());
@@ -171,7 +173,7 @@ namespace AP {
                     continue;
                 }
                 if (const auto* armo = entry->object->As<RE::TESObjectARMO>()) {
-                    wornHead |= static_cast<std::uint32_t>(armo->GetSlotMask()) &
+                    wornHead |= armo->GetSlotMask().underlying() &
                                 kHT2HeadSlots;
                 }
             }
@@ -206,7 +208,7 @@ namespace AP {
                 spdlog::info("preview rejected: '{}' ({:08X}, mask={:08X}) targets a head "
                              "slot hidden by Helmet Toggle (HT_HelmetState > 0).",
                              a_name, a_formID, a_mask);
-                RE::DebugNotification("Cannot preview: headwear is hidden by Helmet Toggle.",
+                RE::SendHUDMessage::ShowHUDMessage("Cannot preview: headwear is hidden by Helmet Toggle.",
                                       "UIMenuCancel");
             }
             return;
@@ -224,13 +226,13 @@ namespace AP {
         if (cfg.clearModelOnPreview) {
             if (auto* i3d = RE::Inventory3DManager::GetSingleton()) {
                 if (change == PreviewSet::Change::kAdded) {
-                    i3d->Clear3D();
+                    i3d->UnloadInventoryItem();
                 } else if (auto* entry = HoverTracker::GetHovered();
                            entry && !cfg.suppressHoverModel) {
-                    auto* obj = entry->GetObject();
+                    auto* obj = entry->object;
                     if (obj && obj->GetFormID() == a_formID &&
                         VariantKey(entry) == a_variantKey) {
-                        i3d->UpdateItem3D(entry);
+                        i3d->LoadInventoryItem(entry);
                     }
                 }
             }

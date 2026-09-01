@@ -91,7 +91,7 @@ namespace AP {
                 continue;
             }
             auto* entry = item->data.objDesc;
-            auto* obj   = entry ? entry->GetObject() : nullptr;
+            auto* obj   = entry ? entry->object : nullptr;
             if (!obj) {
                 continue;
             }

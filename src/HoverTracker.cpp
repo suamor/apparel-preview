@@ -57,7 +57,7 @@ namespace AP {
             const auto* ue = RE::UserEvents::GetSingleton();
             if (ue && a_event->QUserEvent() == ue->itemZoom) {
                 auto* entry = hovered_.load();
-                auto* obj   = entry ? entry->GetObject() : nullptr;
+                auto* obj   = entry ? entry->object : nullptr;
                 const bool eat = obj && obj->As<RE::TESObjectARMO>() != nullptr;
                 spdlog::debug("I3DM CanProcess(itemZoom): apparel={} -> {}", eat,
                               eat ? "declined" : "passed");
@@ -82,7 +82,7 @@ namespace AP {
             return false;
         }
         auto* entry = hovered_.load();
-        auto* obj   = entry ? entry->GetObject() : nullptr;
+        auto* obj   = entry ? entry->object : nullptr;
         const bool eat = obj && obj->As<RE::TESObjectARMO>() != nullptr;
         spdlog::debug("menu ProcessMessage(itemZoom userEvent): apparel={} -> {}", eat,
                       eat ? "eaten" : "passed");
@@ -128,7 +128,7 @@ namespace AP {
         // window fell through to Flash. Non-apparel hovers keep vanilla
         // item zoom.
         auto* entry = hovered_.load();
-        auto* obj   = entry ? entry->GetObject() : nullptr;
+        auto* obj   = entry ? entry->object : nullptr;
         const bool eat = !entry || (obj && obj->As<RE::TESObjectARMO>() != nullptr);
         if (eat && ev->type == ET::kKeyDown) {
             spdlog::debug("scaleform key {} eaten ({}; {} - preview button)", code,
@@ -175,7 +175,7 @@ namespace AP {
             // always-suppress, and re-hovering a row that is currently
             // previewed (the on-body preview replaces the card model, so
             // scrolling away and back must not bring it back).
-            if (auto* obj = a_entry->GetObject(); obj && obj->As<RE::TESObjectARMO>()) {
+            if (auto* obj = a_entry->object; obj && obj->As<RE::TESObjectARMO>()) {
                 const auto& cfg = Settings::GetSingleton();
                 const bool hidePreviewed =
                     cfg.clearModelOnPreview &&
@@ -183,7 +183,7 @@ namespace AP {
                         obj->GetFormID(), PreviewSession::VariantKey(a_entry));
                 if (cfg.suppressHoverModel || hidePreviewed) {
                     if (auto* i3d = RE::Inventory3DManager::GetSingleton()) {
-                        i3d->Clear3D();
+                        i3d->UnloadInventoryItem();
                         spdlog::debug("item3d cleared for '{}'{}", a_entry->GetDisplayName(),
                                       hidePreviewed ? " (previewed)" : "");
                     }
@@ -200,7 +200,7 @@ namespace AP {
             } else if (ui && ui->IsMenuOpen(RE::InventoryMenu::MENU_NAME)) {
                 menu = "Inventory";
             }
-            const auto* obj  = a_entry->GetObject();
+            const auto* obj  = a_entry->object;
             spdlog::debug("hover[{}] {:08X} '{}' armo={} variant={:08X} entry={} thread={}", menu,
                           obj ? obj->GetFormID() : 0, a_entry->GetDisplayName(),
                           obj && obj->As<RE::TESObjectARMO>() != nullptr,

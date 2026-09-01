@@ -102,7 +102,7 @@ namespace {
     const std::unordered_set<std::uint64_t>& IdSet() {
         static const std::unordered_set<std::uint64_t> set = [] {
             std::unordered_set<std::uint64_t> out;
-            const REL::IDDatabase::Offset2ID  db{};
+            const REL::Offset2ID  db{};
             out.reserve(db.size());
             for (const auto& entry : db) {
                 out.insert(entry.id);
